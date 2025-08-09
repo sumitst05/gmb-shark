@@ -34,7 +34,10 @@ export function ThemedTextInput({
 
   return (
     <TextInput
-      style={[{ color, borderBottomColor: borderColor }, style]}
+      style={[
+        { color, borderBottomColor: borderColor, borderBottomWidth: 1 },
+        style,
+      ]}
       placeholderTextColor={placeholderTextColor}
       {...otherProps}
     />

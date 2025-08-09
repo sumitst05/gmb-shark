@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Alert,
   Dimensions,
+  Image,
 } from "react-native";
 import { navigate } from "expo-router/build/global-state/routing";
 import { LinearGradient } from "expo-linear-gradient";
@@ -35,25 +36,26 @@ export default function AuthScreen() {
   const backgroundColor = useThemeColor({}, "background");
   const cardColor = useThemeColor(
     { light: "#ffffff", dark: "#1c1c1e" },
-    "background",
+    "background"
   );
   const textColor = useThemeColor({}, "text");
   const mutedColor = useThemeColor(
     { light: "#8e8e93", dark: "#8e8e93" },
-    "text",
+    "text"
   );
 
   const { signIn, userToken } = useContext(AuthContext);
 
-  useEffect(() => {
-    if (userToken) {
-      navigate("/(tabs)/dashboard");
-    }
-  }, [userToken]);
+  // this causes the user to skip the bind_account page
+  // useEffect(() => {
+  //   if (userToken) {
+  //     navigate("/(tabs)/dashboard");
+  //   }
+  // }, [userToken]);
 
   const handleLogin = async () => {
     await signIn("token");
-    navigate("/(tabs)/dashboard");
+    navigate("/bind_account");
   };
 
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
@@ -206,9 +208,10 @@ export default function AuthScreen() {
             onPress={() => promptAsync()}
           >
             <View style={styles.socialButtonContent}>
-              <View style={styles.googleIconContainer}>
-                <Text style={styles.googleIcon}>G</Text>
-              </View>
+              <Image
+                style={{ width: 24, height: 24 }}
+                source={require("../assets/images/google.png")}
+              />
               <Text style={[styles.socialButtonText, { color: textColor }]}>
                 Continue with Google
               </Text>
@@ -351,30 +354,17 @@ const styles = StyleSheet.create({
   socialButton: {
     borderRadius: 100,
     borderWidth: 1.5,
-    paddingVertical: 16,
+    paddingVertical: 14,
     paddingHorizontal: 20,
   },
   socialButtonContent: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-  },
-  googleIconContainer: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#4285f4",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
-  googleIcon: {
-    color: "#ffffff",
-    fontSize: 14,
-    fontWeight: "700",
+    gap: 10,
   },
   socialButtonText: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "600",
   },
   signupContainer: {

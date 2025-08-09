@@ -7,6 +7,7 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 import { useThemeContext } from "@/contexts/ThemeContext";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
+import { navigate } from "expo-router/build/global-state/routing";
 
 const SettingButton = ({
   icon,
@@ -85,7 +86,7 @@ export default function SettingsScreen() {
         <SettingButton
           icon="list"
           label="Manage Subscription"
-          onPress={() => {}}
+          onPress={() => navigate("/subscription")}
         />
         <SettingButton
           icon="construct"

@@ -158,10 +158,13 @@ export default function DashboardScreen() {
           <View style={styles.headerTop}>
             <View>
               <ThemedText style={styles.greeting}>
-                Hi! Laal Bhiduri Fitness
+                Hello, 10Matrix Prime!
               </ThemedText>
             </View>
-            <TouchableOpacity style={styles.upgradeButton}>
+            <TouchableOpacity
+              onPress={() => navigate("/subscription")}
+              style={styles.upgradeButton}
+            >
               <LinearGradient
                 colors={["#8b5cf6", "#a855f7"]}
                 start={{ x: 0, y: 0 }}
