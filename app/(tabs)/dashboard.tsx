@@ -1,13 +1,20 @@
 import { useEffect, useState, useContext } from "react";
-import { View, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import {
+	View,
+	TouchableOpacity,
+	StyleSheet,
+	ScrollView,
+	ActivityIndicator,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import { Svg, Circle } from "react-native-svg";
-import { navigate } from "expo-router/build/global-state/routing";
+import { router } from "expo-router";
 import { AuthContext } from "@/contexts/AuthContext";
+import { MockAPI } from "@/src/api/mockClient";
 
 interface StatItemProps {
 	icon: keyof typeof Ionicons.glyphMap;
@@ -89,8 +96,7 @@ const CircularProgress = ({ percentage }: { percentage: number }) => {
 	const size = 120;
 	const strokeWidth = 8;
 	const radius = (size - strokeWidth) / 2;
-	const circumference = radius * 2 * Math.PI;
-	const strokeDasharray = circumference;
+	const circumference = radius * 2 * Math.PI; const strokeDasharray = circumference;
 	const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
 	return (
@@ -126,59 +132,78 @@ const CircularProgress = ({ percentage }: { percentage: number }) => {
 };
 
 export default function DashboardScreen() {
-	const backgroundColor = useThemeColor({}, "background");
+	const [loading, setLoading] = useState(true);
+	const [businessData, setBusinessData] = useState<any>(null); // State for our data
+
 	const cardColor = useThemeColor(
 		{ light: "#ffffff", dark: "#1c1c1e" },
 		"background",
 	);
-	const textColor = useThemeColor({}, "text");
 	const mutedColor = useThemeColor(
 		{ light: "#8e8e93", dark: "#8e8e93" },
 		"text",
 	);
 
 	const { userToken } = useContext(AuthContext);
+
 	useEffect(() => {
-		if (!userToken) navigate("/");
-	});
+		const loadData = async () => {
+			if (!userToken) return;
 
-	const checklistItems = [
-		{ text: "Professional photos", isGood: true },
-		{ text: "Complete business info", isGood: true },
-		{ text: "Regular posts", isGood: true },
-		{ text: "Outdated information", isGood: false },
-		{ text: "Negative reviews", isGood: false },
-		{ text: "Missing contact details", isGood: false },
-	];
+			const data = await MockAPI.getDashboardData();
+			setBusinessData(data);
+			setLoading(false);
+		};
 
-  return (
-    <ThemedView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={[styles.header, { backgroundColor: cardColor }]}>
-          <View style={styles.headerTop}>
-            <View>
-              <ThemedText style={styles.greeting}>
-                Hello, 10Matrix Prime!
-              </ThemedText>
-            </View>
-            <TouchableOpacity
-              onPress={() => navigate("/subscription")}
-              style={styles.upgradeButton}
-            >
-              <LinearGradient
-                colors={["#8b5cf6", "#a855f7"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.upgradeGradient}
-              >
-                <Ionicons name="diamond" size={16} color="#ffffff" />
-                <ThemedText style={styles.upgradeText}>Upgrade</ThemedText>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
+		loadData();
+	}, [userToken]);
+
+	if (loading) {
+		return (
+			<ThemedView
+				style={[
+					styles.container,
+					{ justifyContent: "center", alignItems: "center" },
+				]}
+			>
+				<ActivityIndicator size="large" color="#8b5cf6" />
+				<ThemedText style={{ marginTop: 20, color: mutedColor }}>
+					Syncing with Google Business Profile...
+				</ThemedText>
+			</ThemedView>
+		);
+	}
+
+	return (
+		<ThemedView style={styles.container}>
+			<ScrollView showsVerticalScrollIndicator={false}>
+				<View style={[styles.header, { backgroundColor: cardColor }]}>
+					<View style={styles.headerTop}>
+						<View>
+							<ThemedText style={styles.greeting}>
+								Hello, {businessData?.name || "Business Owner"}!
+							</ThemedText>
+						</View>
+						<TouchableOpacity
+							onPress={() => router.push("/subscription")}
+							style={styles.upgradeButton}
+						>
+							<LinearGradient
+								colors={["#8b5cf6", "#a855f7"]}
+								start={{ x: 0, y: 0 }}
+								end={{ x: 1, y: 0 }}
+								style={styles.upgradeGradient}
+							>
+								<Ionicons name="diamond" size={16} color="#ffffff" />
+								<ThemedText style={styles.upgradeText}>Upgrade</ThemedText>
+							</LinearGradient>
+						</TouchableOpacity>
+					</View>
 
 					<View style={styles.progressSection}>
-						<CircularProgress percentage={100} />
+						<CircularProgress
+							percentage={businessData?.profileCompletion || 0}
+						/>
 						<ThemedText style={[styles.progressLabel, { color: mutedColor }]}>
 							Profile Completion
 						</ThemedText>
@@ -186,22 +211,26 @@ export default function DashboardScreen() {
 
 					<View style={styles.checklistContainer}>
 						<View style={styles.checklistColumn}>
-							{checklistItems.slice(0, 3).map((item, index) => (
-								<ChecklistItem
-									key={index}
-									text={item.text}
-									isGood={item.isGood}
-								/>
-							))}
+							{businessData?.checklist
+								?.slice(0, 3)
+								.map((item: any, index: number) => (
+									<ChecklistItem
+										key={index}
+										text={item.text}
+										isGood={item.isGood}
+									/>
+								))}
 						</View>
 						<View style={styles.checklistColumn}>
-							{checklistItems.slice(3, 6).map((item, index) => (
-								<ChecklistItem
-									key={index}
-									text={item.text}
-									isGood={item.isGood}
-								/>
-							))}
+							{businessData?.checklist
+								?.slice(3, 6)
+								.map((item: any, index: number) => (
+									<ChecklistItem
+										key={index}
+										text={item.text}
+										isGood={item.isGood}
+									/>
+								))}
 						</View>
 					</View>
 
@@ -227,11 +256,25 @@ export default function DashboardScreen() {
 				<View style={styles.actionsContainer}>
 					<ActionButton
 						title="Manage Reviews"
-						onPress={() => navigate("/reviews")}
+						onPress={() => router.push("/reviews")}
 					/>
 					<ActionButton
 						title="Schedule Posts"
 						onPress={() => console.log("Schedule Posts")}
+					/>
+				</View>
+
+				<View style={styles.statsContainer}>
+					<StatItem icon="eye" value={businessData?.views} label="Views" />
+					<StatItem
+						icon="people"
+						value={businessData?.customers}
+						label="Customers"
+					/>
+					<StatItem
+						icon="star"
+						value={businessData?.rating.toString()}
+						label="Rating"
 					/>
 				</View>
 			</ScrollView>

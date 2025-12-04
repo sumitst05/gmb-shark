@@ -20,11 +20,11 @@ const SettingButton = ({
 }) => {
   const bgColor = useThemeColor(
     { light: "#fff", dark: "#1c1c1e" },
-    "background"
+    "background",
   );
   const borderColor = useThemeColor(
     { light: "#e5e7eb", dark: "#3a3a3c" },
-    "background"
+    "background",
   );
   const textColor = useThemeColor({}, "text");
 
@@ -47,17 +47,16 @@ const SettingButton = ({
 };
 
 export default function SettingsScreen() {
-  const navigation = useNavigation();
   const { theme, toggleTheme } = useThemeContext();
-  const { signOut } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
 
   const borderColor = useThemeColor(
     { light: "#e5e7eb", dark: "#3a3a3c" },
-    "background"
+    "background",
   );
   const bgColor = useThemeColor(
     { light: "#fff", dark: "#1c1c1e" },
-    "background"
+    "background",
   );
   const textColor = useThemeColor({}, "text");
 
@@ -67,7 +66,7 @@ export default function SettingsScreen() {
 
   const handleLogout = async () => {
     try {
-      await signOut();
+      await logout();
       console.log("Successfully signed out");
     } catch (error) {
       console.error("Error signing out:", error);

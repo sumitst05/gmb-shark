@@ -1,0 +1,342 @@
+[
+  {
+    "placeId": "chij_mira_001",
+    "title": "Starbucks Coffee",
+    "category": "Coffee Shop",
+    "rating": 4.4,
+    "reviewCount": 850,
+    "address": "Ground Floor, Maxus Mall, Bhayandar West, Mira Bhayandar",
+    "isOpen": true,
+    "phone": "+91 22 2814 5566",
+    "website": "https://www.starbucks.in",
+    "email": "customercare@tata.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_002",
+    "title": "Cafe Coffee Day",
+    "category": "Cafe",
+    "rating": 3.8,
+    "reviewCount": 1200,
+    "address": "Shanti Nagar, Sector 4, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 93245 67890",
+    "website": "https://www.cafecoffeeday.com",
+    "email": "feedback@cafecoffeeday.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_003",
+    "title": "Tea Post",
+    "category": "Tea House",
+    "rating": 4.2,
+    "reviewCount": 340,
+    "address": "Shop 5, Poonam Garden, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 88790 12345",
+    "website": "https://www.teapost.in",
+    "email": "info@teapost.in",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_004",
+    "title": "The Chemistry Lab Cafe",
+    "category": "Cafe",
+    "rating": 4.5,
+    "reviewCount": 210,
+    "address": "Beverly Park, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 99200 99200",
+    "website": "https://www.instagram.com/chemistrylabcafe",
+    "email": "contact@chemistrylab.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": false
+    }
+  },
+  {
+    "placeId": "chij_mira_005",
+    "title": "Barista",
+    "category": "Coffee Shop",
+    "rating": 4.0,
+    "reviewCount": 150,
+    "address": "Thakur Mall, Dahisar Check Naka, Mira Road",
+    "isOpen": true,
+    "phone": "+91 22 2890 4567",
+    "website": "https://www.barista.co.in",
+    "email": "guestcare@barista.co.in",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_006",
+    "title": "Dippin' Doughnuts",
+    "category": "Dessert Shop",
+    "rating": 4.6,
+    "reviewCount": 89,
+    "address": "Kanakia Road, Mira Road East",
+    "isOpen": false,
+    "phone": "+91 98190 54321",
+    "website": "https://www.dippindoughnuts.com",
+    "email": "hello@dippindoughnuts.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_007",
+    "title": "Burger King",
+    "category": "Fast Food",
+    "rating": 4.1,
+    "reviewCount": 2500,
+    "address": "Cinemax, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 22 6123 4567",
+    "website": "https://www.burgerking.in",
+    "email": "customercare@burgerking.in",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_008",
+    "title": "McDonald's",
+    "category": "Fast Food",
+    "rating": 4.0,
+    "reviewCount": 3100,
+    "address": "Rassaz Shopping Mall, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 22 6600 0666",
+    "website": "https://www.mcdonaldsindia.com",
+    "email": "myfeedback@mcdonaldsindia.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_009",
+    "title": "Pizza Hut",
+    "category": "Pizza",
+    "rating": 3.7,
+    "reviewCount": 980,
+    "address": "Jangid Circle, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 1800 202 2022",
+    "website": "https://www.pizzahut.co.in",
+    "email": "hutcares@pizzahut.in",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_010",
+    "title": "Farm House Cafe",
+    "category": "Cafe",
+    "rating": 4.3,
+    "reviewCount": 112,
+    "address": "GCC Club Road, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 98201 11223",
+    "website": "https://www.farmhousecafe.com",
+    "email": "fresh@farmhousecafe.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_011",
+    "title": "Slay Coffee",
+    "category": "Coffee Delivery",
+    "rating": 4.1,
+    "reviewCount": 560,
+    "address": "Cloud Kitchen, Silver Park, Mira Road",
+    "isOpen": true,
+    "phone": "+91 80 4710 4710",
+    "website": "https://www.slay.coffee",
+    "email": "getslayed@slay.coffee",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_012",
+    "title": "Merwans Cake Stop",
+    "category": "Bakery",
+    "rating": 4.7,
+    "reviewCount": 2800,
+    "address": "Station Road, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 22 2855 5555",
+    "website": "https://merwans.co.in",
+    "email": "orders@merwans.co.in",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": false
+    }
+  },
+  {
+    "placeId": "chij_mira_013",
+    "title": "Monginis Cake Shop",
+    "category": "Bakery",
+    "rating": 3.9,
+    "reviewCount": 450,
+    "address": "Naya Nagar, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 22 4050 6070",
+    "website": "https://www.monginis.net",
+    "email": "helpdesk@monginis.net",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_014",
+    "title": "Belgian Waffle Co.",
+    "category": "Dessert",
+    "rating": 4.5,
+    "reviewCount": 1200,
+    "address": "Shanti Gardens, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 99887 76655",
+    "website": "https://www.thebelgianwaffle.co",
+    "email": "feedback@belgianwaffle.co",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_015",
+    "title": "Keventers - Milkshakes",
+    "category": "Beverage Shop",
+    "rating": 4.2,
+    "reviewCount": 600,
+    "address": "Vardhman Fantasy, Mira Road",
+    "isOpen": true,
+    "phone": "+91 98765 43210",
+    "website": "https://www.keventers.com",
+    "email": "support@keventers.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_016",
+    "title": "Chai Point",
+    "category": "Tea House",
+    "rating": 4.0,
+    "reviewCount": 300,
+    "address": "Western Express Highway, Mira Road",
+    "isOpen": true,
+    "phone": "+91 88801 88801",
+    "website": "https://www.chaipoint.com",
+    "email": "feedback@chaipoint.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_017",
+    "title": "Love & Latte",
+    "category": "Cafe",
+    "rating": 4.4,
+    "reviewCount": 180,
+    "address": "Royal College Road, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 22 2600 5000",
+    "website": "https://www.loveandlatte.com",
+    "email": "info@loveandlatte.com",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_018",
+    "title": "Mad Over Donuts",
+    "category": "Dessert Shop",
+    "rating": 4.3,
+    "reviewCount": 410,
+    "address": "Maxus Mall, Bhayandar West",
+    "isOpen": true,
+    "phone": "+91 22 3355 2211",
+    "website": "https://www.madoverdonuts.com",
+    "email": "love@mod.in",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_019",
+    "title": "99 Pancakes",
+    "category": "Dessert Shop",
+    "rating": 4.6,
+    "reviewCount": 750,
+    "address": "Sector 9, Shanti Nagar, Mira Road",
+    "isOpen": true,
+    "phone": "+91 90045 67890",
+    "website": "https://www.99pancakes.in",
+    "email": "info@99pancakes.in",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  },
+  {
+    "placeId": "chij_mira_020",
+    "title": "Subway",
+    "category": "Fast Food",
+    "rating": 3.9,
+    "reviewCount": 560,
+    "address": "Kanakia, Mira Road East",
+    "isOpen": true,
+    "phone": "+91 22 2811 2233",
+    "website": "https://www.subway.com/en-IN",
+    "email": "customercare@subway.in",
+    "attributes": {
+      "hasWebsite": true,
+      "hasMenu": true,
+      "hasOnlineOrdering": true
+    }
+  }
+]
