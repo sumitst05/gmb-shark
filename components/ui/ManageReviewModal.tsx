@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useRef, useEffect } from "react";
 import {
   View,
@@ -35,12 +33,14 @@ interface ReviewManagementModalProps {
   visible: boolean;
   review: Review | null;
   onClose: () => void;
+  onUpdateReply?: (reviewId: string, replyText: string) => void;
 }
 
 export default function ReviewManagementModal({
   visible,
   review,
   onClose,
+  onUpdateReply,
 }: ReviewManagementModalProps) {
   const [replyText, setReplyText] = useState("");
   const [isReplying, setIsReplying] = useState(false);
@@ -60,8 +60,9 @@ export default function ReviewManagementModal({
   );
 
   useEffect(() => {
-    if (visible) {
-      setReplyText(review?.replyText || "");
+    if (visible && review) {
+      setReplyText(review.replyText || "");
+      setIsReplying(!review.hasReply);
       Animated.parallel([
         Animated.timing(slideAnim, {
           toValue: 0,
@@ -74,7 +75,7 @@ export default function ReviewManagementModal({
           useNativeDriver: true,
         }),
       ]).start();
-    } else {
+    } else if (!visible) {
       Animated.parallel([
         Animated.timing(slideAnim, {
           toValue: SCREEN_HEIGHT,
@@ -88,7 +89,15 @@ export default function ReviewManagementModal({
         }),
       ]).start();
     }
-  }, [visible]);
+  }, [visible, review]);
+
+  // Sync with review prop changes even when modal is open
+  useEffect(() => {
+    if (visible && review) {
+      setReplyText(review.replyText || "");
+      setIsReplying(!review.hasReply);
+    }
+  }, [review?.hasReply, review?.replyText]);
 
   const handleClose = () => {
     Animated.parallel([
@@ -110,16 +119,27 @@ export default function ReviewManagementModal({
   };
 
   const handleSendReply = () => {
-    if (replyText.trim()) {
+    if (replyText.trim() && review) {
+      onUpdateReply?.(review.id, replyText.trim());
       Alert.alert("Success", "Your reply has been sent!");
-      handleClose();
+      setIsReplying(false);
     }
   };
 
   const handleDeleteReply = () => {
     Alert.alert("Delete Reply", "Are you sure you want to delete this reply?", [
       { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => setReplyText("") },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => {
+          if (review) {
+            onUpdateReply?.(review.id, "");
+            setReplyText("");
+            setIsReplying(true);
+          }
+        },
+      },
     ]);
   };
 
@@ -220,24 +240,6 @@ export default function ReviewManagementModal({
                           ]}
                         >
                           {review.rating}/5
-                        </ThemedText>
-                      </View>
-                      <View
-                        style={[
-                          styles.platformBadge,
-                          {
-                            backgroundColor:
-                              getPlatformColor(review.platform) + "20",
-                          },
-                        ]}
-                      >
-                        <ThemedText
-                          style={[
-                            styles.platformText,
-                            { color: getPlatformColor(review.platform) },
-                          ]}
-                        >
-                          {review.platform}
                         </ThemedText>
                       </View>
                     </View>
@@ -343,7 +345,7 @@ export default function ReviewManagementModal({
                     textAlignVertical="top"
                   />
                   <View style={styles.replyButtons}>
-                    {isReplying && (
+                    {isReplying && review.hasReply && (
                       <TouchableOpacity
                         style={[
                           styles.replyButton,
@@ -364,7 +366,12 @@ export default function ReviewManagementModal({
                     <TouchableOpacity
                       style={[
                         styles.replyButton,
-                        { backgroundColor: "#3b82f6" },
+                        {
+                          backgroundColor: replyText.trim()
+                            ? "#3b82f6"
+                            : "#8e8e93",
+                          opacity: replyText.trim() ? 1 : 0.5,
+                        },
                       ]}
                       onPress={handleSendReply}
                       disabled={!replyText.trim()}
@@ -393,7 +400,10 @@ export default function ReviewManagementModal({
                   <TouchableOpacity
                     key={index}
                     style={[styles.templateButton, { backgroundColor }]}
-                    onPress={() => setReplyText(template)}
+                    onPress={() => {
+                      setReplyText(template);
+                      setIsReplying(true);
+                    }}
                   >
                     <ThemedText
                       style={[styles.templateText, { color: textColor }]}
@@ -544,7 +554,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderRadius: 12,
     gap: 6,
   },
@@ -605,8 +615,8 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   replyButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     borderRadius: 12,
   },
   replyButtonText: {

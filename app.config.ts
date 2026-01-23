@@ -20,6 +20,8 @@ export default {
 				process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 			googleAndroidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
 			googleWebClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+			razorpayKeyId: process.env.RAZORPAY_KEY_ID || "rzp_test_S7IOIDmE2RXVAg",
+      razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET || "KW7UcQMDgNu1f6KVMHdKYQTS"
 		},
 		ios: {
 			supportsTablet: true,

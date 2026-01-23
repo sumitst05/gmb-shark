@@ -265,12 +265,6 @@ export default function BusinessDetailModal({
                 onPress={() => console.log("Website")}
                 color="#8b5cf6"
               />
-              <ActionButton
-                icon="share"
-                label="Share"
-                onPress={() => console.log("Share")}
-                color="#f59e0b"
-              />
             </View>
 
             {/* Business Info */}
@@ -516,7 +510,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: 8,
     borderRadius: 12,
     gap: 6,
   },

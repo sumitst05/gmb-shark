@@ -5,14 +5,20 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
+import RazorpayCheckout, { SuccessResponse } from "react-native-razorpay";
+import Constants from "expo-constants";
 
 const { width } = Dimensions.get("window");
+
+const razorpayKeyId = Constants.expo?.extra?.razorpayKeyId;
+const razorpayKeySecret = Constants.expo?.extra?.razorpayKeySecret;
 
 interface SubscriptionPlan {
   id: string;
@@ -33,6 +39,7 @@ interface PlanCardProps {
   plan: SubscriptionPlan;
   isSelected: boolean;
   onSelect: (plan: SubscriptionPlan) => void;
+  onSubmit: (plan: SubscriptionPlan) => void;
 }
 
 // Mock subscription plans
@@ -46,20 +53,21 @@ const subscriptionPlans: SubscriptionPlan[] = [
     features: [
       "Basic business profile",
       "Up to 5 reviews monitoring",
-      "Basic analytics",
-      "Email support",
-      "1 social media account",
+      "Basic Business search",
+      // "Basic analytics",
+      // // "Email support",
+      // "1 social media account",
     ],
     limitations: [
       "Limited to 5 reviews per month",
-      "Basic reporting only",
-      "No priority support",
+      "No post scheduling",
+      "No competition survey",
     ],
     buttonText: "Current Plan",
     buttonColor: ["#8e8e93", "#8e8e93"] as [string, string],
   },
   {
-    id: "starter",
+    id: "plan_S7HdsSRgZsui6i",
     name: "Starter",
     description: "Great for small businesses",
     price: 19,
@@ -69,17 +77,16 @@ const subscriptionPlans: SubscriptionPlan[] = [
     features: [
       "Everything in Free",
       "Up to 50 reviews monitoring",
-      "Advanced analytics",
       "Review response templates",
-      "3 social media accounts",
-      "Basic automation",
+      "Competition survey",
+      "Advanced analytics",
       "Priority email support",
     ],
-    buttonText: "Start Free Trial",
+    buttonText: "Subscribe to Starter Plan",
     buttonColor: ["#3b82f6", "#1d4ed8"] as [string, string],
   },
   {
-    id: "professional",
+    id: "plan_S7HeN07PwFeXvE",
     name: "Professional",
     description: "Best for growing businesses",
     price: 49,
@@ -90,43 +97,16 @@ const subscriptionPlans: SubscriptionPlan[] = [
     features: [
       "Everything in Starter",
       "Unlimited reviews monitoring",
+      "Post Scheduling",
       "Advanced AI insights",
       "Custom review responses",
-      "10 social media accounts",
-      "Advanced automation",
-      "Phone & chat support",
-      "Custom reporting",
-      "Team collaboration (5 users)",
     ],
-    buttonText: "Start Free Trial",
+    buttonText: "Subscribe to Professional Plan",
     buttonColor: ["#8b5cf6", "#7c3aed"] as [string, string],
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    description: "For large organizations",
-    price: 99,
-    billingPeriod: "month",
-    originalPrice: 149,
-    discount: "33% OFF",
-    features: [
-      "Everything in Professional",
-      "White-label solutions",
-      "API access",
-      "Unlimited social accounts",
-      "Advanced integrations",
-      "Dedicated account manager",
-      "Custom onboarding",
-      "Unlimited team members",
-      "SLA guarantee",
-      "Custom features",
-    ],
-    buttonText: "Contact Sales",
-    buttonColor: ["#10b981", "#059669"] as [string, string],
   },
 ];
 
-const PlanCard = ({ plan, isSelected, onSelect }: PlanCardProps) => {
+const PlanCard = ({ plan, isSelected, onSelect, onSubmit }: PlanCardProps) => {
   const cardColor = useThemeColor(
     { light: "#ffffff", dark: "#1c1c1e" },
     "background"
@@ -195,7 +175,9 @@ const PlanCard = ({ plan, isSelected, onSelect }: PlanCardProps) => {
         onPress={() => onSelect(plan)}
       >
         <LinearGradient colors={plan.buttonColor} style={styles.buttonGradient}>
-          <ThemedText style={styles.buttonText}>{plan.buttonText}</ThemedText>
+          <ThemedText onPress={() => onSubmit(plan)} style={styles.buttonText}>
+            {plan.buttonText}
+          </ThemedText>
         </LinearGradient>
       </TouchableOpacity>
 
@@ -288,106 +270,106 @@ const BillingToggle = ({
   );
 };
 
-const FeatureComparison = () => {
-  const cardColor = useThemeColor(
-    { light: "#ffffff", dark: "#1c1c1e" },
-    "background"
-  );
-  const textColor = useThemeColor({}, "text");
-  const mutedColor = useThemeColor(
-    { light: "#8e8e93", dark: "#8e8e93" },
-    "text"
-  );
+// const FeatureComparison = () => {
+//   const cardColor = useThemeColor(
+//     { light: "#ffffff", dark: "#1c1c1e" },
+//     "background"
+//   );
+//   const textColor = useThemeColor({}, "text");
+//   const mutedColor = useThemeColor(
+//     { light: "#8e8e93", dark: "#8e8e93" },
+//     "text"
+//   );
 
-  const comparisonFeatures = [
-    {
-      feature: "Reviews Monitoring",
-      free: "5",
-      starter: "50",
-      pro: "Unlimited",
-      enterprise: "Unlimited",
-    },
-    {
-      feature: "Social Media Accounts",
-      free: "1",
-      starter: "3",
-      pro: "10",
-      enterprise: "Unlimited",
-    },
-    {
-      feature: "Team Members",
-      free: "1",
-      starter: "1",
-      pro: "5",
-      enterprise: "Unlimited",
-    },
-    {
-      feature: "AI Insights",
-      free: "❌",
-      starter: "Basic",
-      pro: "Advanced",
-      enterprise: "Custom",
-    },
-    {
-      feature: "API Access",
-      free: "❌",
-      starter: "❌",
-      pro: "❌",
-      enterprise: "✅",
-    },
-    {
-      feature: "Priority Support",
-      free: "❌",
-      starter: "Email",
-      pro: "Phone & Chat",
-      enterprise: "Dedicated",
-    },
-  ];
+//   const comparisonFeatures = [
+//     {
+//       feature: "Reviews Monitoring",
+//       free: "5",
+//       starter: "50",
+//       pro: "Unlimited",
+//       enterprise: "Unlimited",
+//     },
+//     {
+//       feature: "Social Media Accounts",
+//       free: "1",
+//       starter: "3",
+//       pro: "10",
+//       enterprise: "Unlimited",
+//     },
+//     {
+//       feature: "Team Members",
+//       free: "1",
+//       starter: "1",
+//       pro: "5",
+//       enterprise: "Unlimited",
+//     },
+//     {
+//       feature: "AI Insights",
+//       free: "❌",
+//       starter: "Basic",
+//       pro: "Advanced",
+//       enterprise: "Custom",
+//     },
+//     {
+//       feature: "API Access",
+//       free: "❌",
+//       starter: "❌",
+//       pro: "❌",
+//       enterprise: "✅",
+//     },
+//     {
+//       feature: "Priority Support",
+//       free: "❌",
+//       starter: "Email",
+//       pro: "Phone & Chat",
+//       enterprise: "Dedicated",
+//     },
+//   ];
 
-  return (
-    <View style={[styles.comparisonTable, { backgroundColor: cardColor }]}>
-      <ThemedText style={styles.comparisonTitle}>Feature Comparison</ThemedText>
-      <View style={styles.tableHeader}>
-        <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
-          Feature
-        </ThemedText>
-        <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
-          Free
-        </ThemedText>
-        <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
-          Starter
-        </ThemedText>
-        <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
-          Pro
-        </ThemedText>
-        <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
-          Enterprise
-        </ThemedText>
-      </View>
-      {comparisonFeatures.map((item, index) => (
-        <View key={index} style={styles.tableRow}>
-          <ThemedText
-            style={[styles.tableCell, styles.featureCell, { color: textColor }]}
-          >
-            {item.feature}
-          </ThemedText>
-          <ThemedText style={[styles.tableCell, { color: textColor }]}>
-            {item.free}
-          </ThemedText>
-          <ThemedText style={[styles.tableCell, { color: textColor }]}>
-            {item.starter}
-          </ThemedText>
-          <ThemedText style={[styles.tableCell, { color: textColor }]}>
-            {item.pro}
-          </ThemedText>
-          <ThemedText style={[styles.tableCell, { color: textColor }]}>
-            {item.enterprise}
-          </ThemedText>
-        </View>
-      ))}
-    </View>
-  );
-};
+//   return (
+//     <View style={[styles.comparisonTable, { backgroundColor: cardColor }]}>
+//       <ThemedText style={styles.comparisonTitle}>Feature Comparison</ThemedText>
+//       <View style={styles.tableHeader}>
+//         <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
+//           Feature
+//         </ThemedText>
+//         <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
+//           Free
+//         </ThemedText>
+//         <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
+//           Starter
+//         </ThemedText>
+//         <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
+//           Pro
+//         </ThemedText>
+//         <ThemedText style={[styles.tableHeaderText, { color: mutedColor }]}>
+//           Enterprise
+//         </ThemedText>
+//       </View>
+//       {comparisonFeatures.map((item, index) => (
+//         <View key={index} style={styles.tableRow}>
+//           <ThemedText
+//             style={[styles.tableCell, styles.featureCell, { color: textColor }]}
+//           >
+//             {item.feature}
+//           </ThemedText>
+//           <ThemedText style={[styles.tableCell, { color: textColor }]}>
+//             {item.free}
+//           </ThemedText>
+//           <ThemedText style={[styles.tableCell, { color: textColor }]}>
+//             {item.starter}
+//           </ThemedText>
+//           <ThemedText style={[styles.tableCell, { color: textColor }]}>
+//             {item.pro}
+//           </ThemedText>
+//           <ThemedText style={[styles.tableCell, { color: textColor }]}>
+//             {item.enterprise}
+//           </ThemedText>
+//         </View>
+//       ))}
+//     </View>
+//   );
+// };
 
 const FAQ = () => {
   const cardColor = useThemeColor(
@@ -405,11 +387,6 @@ const FAQ = () => {
       question: "Can I change my plan anytime?",
       answer:
         "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.",
-    },
-    {
-      question: "Is there a free trial?",
-      answer:
-        "Yes, all paid plans come with a 14-day free trial. No credit card required to start.",
     },
     {
       question: "What payment methods do you accept?",
@@ -458,6 +435,83 @@ export default function SubscriptionPage() {
     // TODO: Navigate to payment or handle subscription
   };
 
+  const handlePlanSubmit = async (plan: SubscriptionPlan) => {
+    console.log("subscribing to:", plan.name);
+
+    try {
+      const subscriptionData = {
+        plan_id: plan.id,
+        total_count: 12,
+        customer_notify: 1,
+      };
+
+      const response = await fetch(
+        "https://api.razorpay.com/v1/subscriptions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Basic " + btoa(`${razorpayKeyId}:${razorpayKeySecret}`),
+          },
+          body: JSON.stringify(subscriptionData),
+        }
+      );
+
+      const subscription = await response.json();
+      console.log("sub: ", subscription);
+      if (!subscription.id) {
+        throw new Error("Failed to create subscription");
+      }
+
+      const options = {
+        description: `${plan.name} Subscription`,
+        currency: "INR",
+        key: razorpayKeyId,
+        subscription_id: subscription.id,
+        name: "Your App Name",
+        prefill: {
+          email: "cafearmoa@test.com",
+          contact: "9999999999",
+          name: "Cafe Aroma",
+        },
+        theme: { color: "#6366f1" },
+      };
+
+      RazorpayCheckout.open(options as any)
+        .then((data) => {
+          // Payment successful
+          console.log("Success:", data);
+          Alert.alert("Success!", `Payment successful!\n Data: ${data}`, [
+            { text: "OK", onPress: () => handleSuccessfulPayment(data) },
+          ]);
+        })
+        .catch((error) => {
+          // Payment failed or cancelled
+          console.log("Error:", error);
+          Alert.alert(
+            "Payment Failed",
+            error.description || "Payment was cancelled or failed"
+          );
+        });
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+
+  const handleSuccessfulPayment = (data: SuccessResponse) => {
+    // Here you would typically:
+    // 1. Verify payment signature on backend
+    // 2. Update user's subscription status in your database
+    // 3. Grant access to premium features
+
+    console.log("Payment Data:", {
+      paymentId: data.razorpay_payment_id,
+      subscriptionId: data.razorpay_order_id,
+      signature: data.razorpay_signature,
+    });
+  };
+
   const displayedPlans = subscriptionPlans.map((plan) => ({
     ...plan,
     price:
@@ -495,12 +549,13 @@ export default function SubscriptionPage() {
               plan={plan}
               isSelected={selectedPlan?.id === plan.id}
               onSelect={handlePlanSelect}
+              onSubmit={handlePlanSubmit}
             />
           ))}
         </View>
 
         {/* Feature Comparison */}
-        <FeatureComparison />
+        {/* <FeatureComparison /> */}
 
         {/* FAQ */}
         <FAQ />
@@ -510,10 +565,6 @@ export default function SubscriptionPage() {
           <View style={styles.trustItem}>
             <Ionicons name="shield-checkmark" size={24} color="#10b981" />
             <ThemedText style={styles.trustText}>Secure Payment</ThemedText>
-          </View>
-          <View style={styles.trustItem}>
-            <Ionicons name="refresh" size={24} color="#3b82f6" />
-            <ThemedText style={styles.trustText}>14-Day Free Trial</ThemedText>
           </View>
           <View style={styles.trustItem}>
             <Ionicons name="close-circle" size={24} color="#f59e0b" />
@@ -616,16 +667,16 @@ const styles = StyleSheet.create({
   },
   popularBadge: {
     position: "absolute",
-    top: -12,
-    left: 24,
-    right: 24,
+    top: -16,
+    left: 20,
+    width: 130,
+    right: 20,
     zIndex: 1,
   },
   popularGradient: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 8,
+    paddingVertical: 4,
     paddingHorizontal: 16,
     borderRadius: 12,
     gap: 6,

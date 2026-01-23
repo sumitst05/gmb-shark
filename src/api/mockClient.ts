@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import competitors from "../data/competitors.json";
+import reviews from "../data/reviews.json";
 
 const DEMO_BUSINESS = {
   id: "biz_cafe_aroma",
@@ -40,6 +41,11 @@ export const MockAPI = {
   getCompetitors: async () => {
     await new Promise((resolve) => setTimeout(resolve, 1200));
     return competitors;
+  },
+
+  getReviews: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+    return reviews;
   },
 
   performAction: async (actionType: string) => {
