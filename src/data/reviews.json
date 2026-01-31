@@ -1,0 +1,59 @@
+[
+  {
+    "id": "1",
+    "reviewerName": "Sarah Johnson",
+    "reviewerInitial": "S",
+    "rating": 5,
+    "reviewText": "Absolutely amazing service! The staff was incredibly friendly and the food was outstanding. I've been coming here for months and it never disappoints. Highly recommend to anyone looking for a great dining experience.",
+    "date": "2 days ago",
+    "platform": "Google",
+    "hasReply": false,
+    "isRecent": true
+  },
+  {
+    "id": "2",
+    "reviewerName": "Mike Chen",
+    "reviewerInitial": "M",
+    "rating": 4,
+    "reviewText": "Good food and decent service. The atmosphere is nice and cozy. Only complaint is that it took a bit long to get our order, but the quality made up for it.",
+    "date": "1 week ago",
+    "platform": "Yelp",
+    "hasReply": true,
+    "replyText": "Thank you for your feedback Mike! We're working on improving our service speed.",
+    "isRecent": false
+  },
+  {
+    "id": "3",
+    "reviewerName": "Emily Rodriguez",
+    "reviewerInitial": "E",
+    "rating": 2,
+    "reviewText": "Unfortunately, my experience wasn't great. The food was cold when it arrived and the service was slow. I hope they can improve because the location is convenient.",
+    "date": "2 weeks ago",
+    "platform": "Google",
+    "hasReply": false,
+    "isRecent": false
+  },
+  {
+    "id": "4",
+    "reviewerName": "David Thompson",
+    "reviewerInitial": "D",
+    "rating": 5,
+    "reviewText": "Perfect! Everything from the ambiance to the food was exceptional. The staff went above and beyond to make our anniversary dinner special.",
+    "date": "3 weeks ago",
+    "platform": "Facebook",
+    "hasReply": true,
+    "replyText": "Thank you so much David! We're thrilled we could make your anniversary special.",
+    "isRecent": false
+  },
+  {
+    "id": "5",
+    "reviewerName": "Lisa Park",
+    "reviewerInitial": "L",
+    "rating": 3,
+    "reviewText": "Average experience. The food was okay but nothing special. Service was friendly though.",
+    "date": "1 month ago",
+    "platform": "Yelp",
+    "hasReply": false,
+    "isRecent": false
+  }
+]

@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
   StyleSheet,
   FlatList,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { Ionicons } from "@expo/vector-icons";
 import ReviewManagementModal from "../components/ui/ManageReviewModal";
+import { MockAPI } from "@/src/api/mockClient";
 
 interface Review {
   id: string;
@@ -30,73 +32,6 @@ interface ReviewCardProps {
   review: Review;
   onExpand: (review: Review) => void;
 }
-
-const mockReviews: Review[] = [
-  {
-    id: "1",
-    reviewerName: "Sarah Johnson",
-    reviewerInitial: "S",
-    rating: 5,
-    reviewText:
-      "Absolutely amazing service! The staff was incredibly friendly and the food was outstanding. I've been coming here for months and it never disappoints. Highly recommend to anyone looking for a great dining experience.",
-    date: "2 days ago",
-    platform: "Google",
-    hasReply: false,
-    isRecent: true,
-  },
-  {
-    id: "2",
-    reviewerName: "Mike Chen",
-    reviewerInitial: "M",
-    rating: 4,
-    reviewText:
-      "Good food and decent service. The atmosphere is nice and cozy. Only complaint is that it took a bit long to get our order, but the quality made up for it.",
-    date: "1 week ago",
-    platform: "Yelp",
-    hasReply: true,
-    replyText:
-      "Thank you for your feedback Mike! We're working on improving our service speed.",
-    isRecent: false,
-  },
-  {
-    id: "3",
-    reviewerName: "Emily Rodriguez",
-    reviewerInitial: "E",
-    rating: 2,
-    reviewText:
-      "Unfortunately, my experience wasn't great. The food was cold when it arrived and the service was slow. I hope they can improve because the location is convenient.",
-    date: "2 weeks ago",
-    platform: "Google",
-    hasReply: false,
-    isRecent: false,
-  },
-  {
-    id: "4",
-    reviewerName: "David Thompson",
-    reviewerInitial: "D",
-    rating: 5,
-    reviewText:
-      "Perfect! Everything from the ambiance to the food was exceptional. The staff went above and beyond to make our anniversary dinner special.",
-    date: "3 weeks ago",
-    platform: "Facebook",
-    hasReply: true,
-    replyText:
-      "Thank you so much David! We're thrilled we could make your anniversary special.",
-    isRecent: false,
-  },
-  {
-    id: "5",
-    reviewerName: "Lisa Park",
-    reviewerInitial: "L",
-    rating: 3,
-    reviewText:
-      "Average experience. The food was okay but nothing special. Service was friendly though.",
-    date: "1 month ago",
-    platform: "Yelp",
-    hasReply: false,
-    isRecent: false,
-  },
-];
 
 const ReviewCard = ({ review, onExpand }: ReviewCardProps) => {
   const cardColor = useThemeColor(
@@ -166,25 +101,10 @@ const ReviewCard = ({ review, onExpand }: ReviewCardProps) => {
                   {review.rating}/5
                 </ThemedText>
               </View>
-              <View style={styles.platformBadge}>
-                <ThemedText
-                  style={[
-                    styles.platformText,
-                    { color: getPlatformColor(review.platform) },
-                  ]}
-                >
-                  {review.platform}
-                </ThemedText>
-              </View>
             </View>
           </View>
         </View>
         <View style={styles.reviewActions}>
-          {review.isRecent && (
-            <View style={styles.newBadge}>
-              <ThemedText style={styles.newBadgeText}>New</ThemedText>
-            </View>
-          )}
           <ThemedText style={[styles.reviewDate, { color: mutedColor }]}>
             {review.date}
           </ThemedText>
@@ -234,7 +154,11 @@ const ReviewCard = ({ review, onExpand }: ReviewCardProps) => {
   );
 };
 
-const StatsCard = () => {
+interface StatsCardProps {
+  reviews: Review[];
+}
+
+const StatsCard = ({ reviews }: StatsCardProps) => {
   const cardColor = useThemeColor(
     { light: "#ffffff", dark: "#1c1c1e" },
     "background"
@@ -244,17 +168,26 @@ const StatsCard = () => {
     "text"
   );
 
+  const avgRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        ).toFixed(1)
+      : "0.0";
+
+  const pendingCount = reviews.filter((r) => !r.hasReply).length;
+
   return (
     <View style={[styles.statsCard, { backgroundColor: cardColor }]}>
       <View style={styles.statItem}>
-        <ThemedText style={styles.statNumber}>4.2</ThemedText>
+        <ThemedText style={styles.statNumber}>{avgRating}</ThemedText>
         <ThemedText style={[styles.statLabel, { color: mutedColor }]}>
           Avg Rating
         </ThemedText>
       </View>
       <View style={styles.statDivider} />
       <View style={styles.statItem}>
-        <ThemedText style={styles.statNumber}>127</ThemedText>
+        <ThemedText style={styles.statNumber}>{reviews.length}</ThemedText>
         <ThemedText style={[styles.statLabel, { color: mutedColor }]}>
           Total Reviews
         </ThemedText>
@@ -262,7 +195,7 @@ const StatsCard = () => {
       <View style={styles.statDivider} />
       <View style={styles.statItem}>
         <ThemedText style={[styles.statNumber, { color: "#f59e0b" }]}>
-          3
+          {pendingCount}
         </ThemedText>
         <ThemedText style={[styles.statLabel, { color: mutedColor }]}>
           Pending
@@ -273,6 +206,8 @@ const StatsCard = () => {
 };
 
 export default function ManageReviews() {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [filterType, setFilterType] = useState<"all" | "pending" | "replied">(
@@ -285,6 +220,21 @@ export default function ManageReviews() {
     "text"
   );
 
+  useEffect(() => {
+    const fetchReviews = async () => {
+      setLoading(true);
+      try {
+        const data = await MockAPI.getReviews();
+        setReviews(data as Review[]);
+      } catch (error) {
+        console.error("Failed to load reviews", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReviews();
+  }, []);
+
   const handleExpandReview = (review: Review) => {
     setSelectedReview(review);
     setModalVisible(true);
@@ -295,7 +245,34 @@ export default function ManageReviews() {
     setSelectedReview(null);
   };
 
-  const filteredReviews = mockReviews.filter((review) => {
+  const handleUpdateReply = (reviewId: string, replyText: string) => {
+    setReviews((prevReviews) =>
+      prevReviews.map((review) =>
+        review.id === reviewId
+          ? {
+              ...review,
+              hasReply: replyText.length > 0,
+              replyText: replyText.length > 0 ? replyText : undefined,
+            }
+          : review
+      )
+    );
+
+    // Also update the selected review so the modal shows updated data
+    if (selectedReview?.id === reviewId) {
+      setSelectedReview((prev) =>
+        prev
+          ? {
+              ...prev,
+              hasReply: replyText.length > 0,
+              replyText: replyText.length > 0 ? replyText : undefined,
+            }
+          : null
+      );
+    }
+  };
+
+  const filteredReviews = reviews.filter((review) => {
     if (filterType === "pending") return !review.hasReply;
     if (filterType === "replied") return review.hasReply;
     return true;
@@ -304,6 +281,19 @@ export default function ManageReviews() {
   const renderReview = ({ item }: { item: Review }) => (
     <ReviewCard review={item} onExpand={handleExpandReview} />
   );
+
+  if (loading) {
+    return (
+      <ThemedView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#3b82f6" />
+          <ThemedText style={{ marginTop: 10, color: mutedColor }}>
+            Loading reviews...
+          </ThemedText>
+        </View>
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={styles.container}>
@@ -316,7 +306,7 @@ export default function ManageReviews() {
       </View>
 
       {/* Stats Card */}
-      <StatsCard />
+      <StatsCard reviews={reviews} />
 
       {/* Filter Tabs */}
       <View style={styles.filterContainer}>
@@ -326,16 +316,16 @@ export default function ManageReviews() {
           contentContainerStyle={styles.filterScroll}
         >
           {[
-            { key: "all", label: "All Reviews", count: mockReviews.length },
+            { key: "all", label: "All Reviews", count: reviews.length },
             {
               key: "pending",
               label: "Pending Reply",
-              count: mockReviews.filter((r) => !r.hasReply).length,
+              count: reviews.filter((r) => !r.hasReply).length,
             },
             {
               key: "replied",
               label: "Replied",
-              count: mockReviews.filter((r) => r.hasReply).length,
+              count: reviews.filter((r) => r.hasReply).length,
             },
           ].map((filter) => (
             <TouchableOpacity
@@ -373,6 +363,7 @@ export default function ManageReviews() {
         visible={modalVisible}
         review={selectedReview}
         onClose={handleCloseModal}
+        onUpdateReply={handleUpdateReply}
       />
     </ThemedView>
   );
@@ -382,15 +373,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 60,
-    paddingBottom: 16,
+    paddingTop: 20,
+    paddingBottom: 10,
   },
   headerTitle: {
     fontSize: 32,
     fontWeight: "700",
-    marginBottom: 4,
+    marginBottom: 2,
+    lineHeight: 40,
   },
   headerSubtitle: {
     fontSize: 16,
@@ -399,7 +396,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginHorizontal: 24,
     marginBottom: 24,
-    padding: 20,
+    padding: 10,
     borderRadius: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -412,7 +409,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   statNumber: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "700",
     marginBottom: 4,
   },
@@ -493,7 +490,6 @@ const styles = StyleSheet.create({
   reviewerName: {
     fontSize: 16,
     fontWeight: "600",
-    marginBottom: 4,
   },
   reviewMeta: {
     flexDirection: "row",
