@@ -87,11 +87,11 @@ export default function SettingsScreen() {
           label="Manage Subscription"
           onPress={() => navigate("/subscription")}
         />
-        <SettingButton
+        {/* <SettingButton
           icon="construct"
           label="Manage Permissions"
           onPress={() => {}}
-        />
+        /> */}
       </View>
 
       <TouchableOpacity
