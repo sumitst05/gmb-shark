@@ -15,6 +15,7 @@ import { Svg, Circle } from "react-native-svg";
 import { router } from "expo-router";
 import { AuthContext } from "@/contexts/AuthContext";
 import { MockAPI } from "@/src/api/mockClient";
+import { Info } from "lucide-react-native";
 
 interface StatItemProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -206,11 +207,11 @@ export default function DashboardScreen() {
               percentage={businessData?.profileCompletion || 0}
             />
             <ThemedText style={[styles.progressLabel, { color: mutedColor }]}>
-              Profile Completion
+              Business Profile Score
             </ThemedText>
           </View>
 
-          <View style={styles.checklistContainer}>
+          {/* <View style={styles.checklistContainer}>
             <View style={styles.checklistColumn}>
               {businessData?.checklist
                 ?.slice(0, 3)
@@ -233,18 +234,36 @@ export default function DashboardScreen() {
                   />
                 ))}
             </View>
+          </View> */}
+          <View style={styles.infoBanner}>
+            <View style={styles.infoIconWrapper}>
+              <Info size={13} color="#f8e45c" />
+            </View>
+            <ThemedText style={styles.infoText}>
+              Business Profile Score quantifies how well your Google Business
+              Profile is optimized based on several profile factors.
+            </ThemedText>
           </View>
 
-          <TouchableOpacity style={styles.takeActionButton}>
+          <TouchableOpacity
+            style={styles.takeActionButton}
+            onPress={() => router.push("/suggestions")}
+          >
             <LinearGradient
               colors={["#6366f1", "#8b5cf6"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.takeActionGradient}
             >
-              <ThemedText style={styles.takeActionText}>
-                Take Action!
-              </ThemedText>
+              <View style={styles.takeActionInner}>
+                <ThemedText style={styles.takeActionText}>
+                  View Suggestions
+                </ThemedText>
+                <View style={styles.proBadge}>
+                  <Ionicons name="diamond" size={13} color="#6366f1" />
+                  <ThemedText style={styles.proBadgeText}>PRO</ThemedText>
+                </View>
+              </View>
             </LinearGradient>
           </TouchableOpacity>
 
@@ -274,7 +293,7 @@ export default function DashboardScreen() {
           />
           <ActionButton
             title="Schedule Posts"
-            onPress={() => console.log("Schedule Posts")}
+            onPress={() => router.push("/schedule_post")}
           />
         </View>
       </ScrollView>
@@ -384,24 +403,71 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     flex: 1,
   },
+  infoBanner: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    backgroundColor: "rgba(248, 228, 92, 0.08)",
+    borderWidth: 1,
+    borderColor: "rgba(248, 228, 92, 0.2)",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 25,
+    marginTop: -15,
+    gap: 10,
+  },
+  infoIconWrapper: {
+    marginTop: 2,
+    flexShrink: 0,
+  },
+  infoText: {
+    color: "rgba(248, 228, 92, 0.85)",
+    fontSize: 11,
+    lineHeight: 16,
+    flex: 1,
+  },
   takeActionButton: {
     borderRadius: 16,
     marginBottom: 24,
-    shadowColor: "#3b82f6",
+    shadowColor: "#8b5cf6",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
     elevation: 8,
+    overflow: "hidden",
   },
   takeActionGradient: {
-    paddingVertical: 10,
+    paddingVertical: 13,
+    paddingHorizontal: 20,
     borderRadius: 16,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  takeActionInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
   },
   takeActionText: {
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "700",
+  },
+  proBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 7,
+    paddingVertical: 0,
+    borderRadius: 20,
+  },
+  proBadgeText: {
+    color: "#6366f1",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 0.5,
   },
   statsContainer: {
     flexDirection: "row",
